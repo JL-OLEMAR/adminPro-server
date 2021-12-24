@@ -1,9 +1,11 @@
 const Usuario = require('../models/usuario.js')
 
-const getUsers = (req, res) => {
+const getUsers = async (req, res) => {
+  const usuarios = await Usuario.find({}, 'nombre email role google')
+
   res.json({
     ok: true,
-    msg: 'get users'
+    usuarios
   })
 }
 
