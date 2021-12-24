@@ -2,10 +2,11 @@
   Ruta: /api/usuarios
 */
 const { Router } = require('express')
-const { getUsuarios } = require('../controllers/usuarios.js')
+const { getUsers, newUser } = require('../controllers/usuarios.js')
 
 const router = Router()
 
-router.get('/', getUsuarios)
+router.get('/', getUsers)
+router.post('/', newUser)
 
 module.exports = router

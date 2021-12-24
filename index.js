@@ -9,7 +9,10 @@ const app = express()
 // Config cors
 app.use(cors())
 
-// Base de datos
+// Lectura y parseo del body
+app.use(express.json())
+
+// Conectar a la base de datos
 dbConnection()
 
 // Rutas
