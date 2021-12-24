@@ -1,5 +1,4 @@
 const { response } = require('express')
-const { validationResult } = require('express-validator')
 const Usuario = require('../models/usuario.js')
 
 const getUsers = async (req, res) => {
@@ -13,14 +12,6 @@ const getUsers = async (req, res) => {
 
 const newUser = async (req, res = response) => {
   const { nombre, password, email } = req.body
-  const errores = validationResult(req)
-
-  if (!errores.isEmpty()) {
-    return res.status(400).json({
-      ok: false,
-      errores: errores.mapped()
-    })
-  }
 
   try {
     const existeEmail = await Usuario.findOne({ email })
