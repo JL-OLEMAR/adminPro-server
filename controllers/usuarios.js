@@ -46,4 +46,54 @@ const newUser = async (req, res = response) => {
   }
 }
 
-module.exports = { getUsers, newUser }
+const actualizarUsuario = async (req, res = response) => {
+  // TODO: Validar token y comprobar si es el usuario correcto
+
+  const uid = req.params.id
+
+  try {
+    const usuarioDB = await Usuario.findById(uid)
+
+    if (!usuarioDB) {
+      return res.status(404).json({
+        ok: false,
+        msg: 'El usuario no existe por ese id'
+      })
+    }
+
+    // Captura los campos a actualizar
+    const campos = req.body
+
+    // Si el email es igual al actual no se actualiza,
+    if (usuarioDB.email === req.body.email) {
+      delete campos.email
+    } else {
+      // de lo contrario se actualizará el email, siempre y cuando no sea acupado por otro usuario
+      const existeEmail = await Usuario.findOne({ email: req.body.email })
+      if (existeEmail) {
+        return res.status(400).json({
+          ok: false,
+          msg: 'El usuario ya existe con ese email'
+        })
+      }
+    }
+
+    delete campos.password // No se actualizará el password
+    delete campos.google // No se actualizará google
+
+    const usuarioActualizado = await Usuario.findByIdAndUpdate(uid, campos, { new: true })
+
+    res.json({
+      ok: true,
+      usuario: usuarioActualizado
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({
+      ok: false,
+      msg: 'Error, contacte al administrador'
+    })
+  }
+}
+
+module.exports = { actualizarUsuario, getUsers, newUser }
