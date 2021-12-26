@@ -61,15 +61,14 @@ const actualizarUsuario = async (req, res = response) => {
       })
     }
 
-    // Captura los campos a actualizar
-    const campos = req.body
+    // Captura los campos a actualizar enviados por el cliente, excluyendo email, password y google
+    const { email, password, google, ...campos } = req.body
 
-    // Si el email es igual al actual no se actualiza,
-    if (usuarioDB.email === req.body.email) {
-      delete campos.email
-    } else {
-      // de lo contrario se actualizará el email, siempre y cuando no sea acupado por otro usuario
-      const existeEmail = await Usuario.findOne({ email: req.body.email })
+    // Si el email es distinto al actual, se actualizarán los campos no excluidos
+    if (usuarioDB.email !== email) {
+      const existeEmail = await Usuario.findOne({ email })
+
+      // Siempre y cuando el email, no sea acupado por otro usuario
       if (existeEmail) {
         return res.status(400).json({
           ok: false,
@@ -78,9 +77,10 @@ const actualizarUsuario = async (req, res = response) => {
       }
     }
 
-    delete campos.password // No se actualizará el password
-    delete campos.google // No se actualizará google
+    // Asigna email, pues lineas anteriores se esta excluyendo el email
+    campos.email = email
 
+    // Aqui, se actualizará los nuevos campos del usuario
     const usuarioActualizado = await Usuario.findByIdAndUpdate(uid, campos, { new: true })
 
     res.json({
