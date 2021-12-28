@@ -10,7 +10,8 @@
   },
   "keywords": [
     "mongodb",
-    "express"
+    "express",
+    "jsonwebtoken"
   ],
   "author": "José Luis Olemar",
   "license": "ISC",
