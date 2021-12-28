@@ -17,6 +17,7 @@ dbConnection()
 
 // Rutas
 app.use('/api/usuarios', require('./routes/usuarios.js'))
+app.use('/api/login', require('./routes/auth.js'))
 
 app.listen(process.env.PORT, () => {
   console.log(`Server corriendo en: http://localhost:${process.env.PORT}`)
