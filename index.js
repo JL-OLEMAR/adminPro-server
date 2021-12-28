@@ -17,6 +17,7 @@ dbConnection()
 
 // Rutas
 app.use('/api/usuarios', require('./routes/usuarios.js'))
+app.use('/api/hospitales', require('./routes/hospitales.js'))
 app.use('/api/login', require('./routes/auth.js'))
 
 app.listen(process.env.PORT, () => {
