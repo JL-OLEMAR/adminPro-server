@@ -5,11 +5,23 @@ const Usuario = require('../models/usuario.js')
 const { generarJWT } = require('../helpers/jwt.js')
 
 const getUsers = async (req, res) => {
-  const usuarios = await Usuario.find({}, 'nombre email role google')
+  const desde = Number(req.query.desde) || 0
+
+  /* Forma de ejecutar en silmutanio ambas consultas, no esperar
+   a que se ejecuten uno a la vez, y retornan en la posición del array */
+  const [usuarios, total] = await Promise.all([
+    Usuario
+      .find({}, 'nombre email role google')
+      .skip(desde) // Salta los primeros 5 registros
+      .limit(5), // Muestra solo 5 registros por página
+
+    Usuario.count()
+  ])
 
   res.json({
     ok: true,
-    usuarios
+    usuarios,
+    total
   })
 }
 
