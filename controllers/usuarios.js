@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs')
 const Usuario = require('../models/usuario.js')
 const { generarJWT } = require('../helpers/jwt.js')
 
-const getUsers = async (req, res) => {
+const getUsers = async (req, res = response) => {
   const desde = Number(req.query.desde) || 0
 
   /* Forma de ejecutar en silmutanio ambas consultas, no esperar
