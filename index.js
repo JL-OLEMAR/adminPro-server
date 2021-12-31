@@ -21,6 +21,7 @@ app.use('/api/hospitales', require('./routes/hospitales.js'))
 app.use('/api/medicos', require('./routes/medicos.js'))
 app.use('/api/login', require('./routes/auth.js'))
 app.use('/api/todo', require('./routes/busquedas.js'))
+app.use('/api/upload', require('./routes/uploads.js'))
 
 app.listen(process.env.PORT, () => {
   console.log(`Server corriendo en: http://localhost:${process.env.PORT}`)

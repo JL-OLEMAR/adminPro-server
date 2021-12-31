@@ -40,7 +40,6 @@ const getDocumentosColeccion = async (req, res = response) => {
         .find({ nombre: regex })
         .populate('usuario', 'nombre img')
         .populate('hospital', 'nombre img')
-
       break
 
     case 'hospitales':
