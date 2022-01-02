@@ -1,5 +1,6 @@
 const { response } = require('express')
 const { v4: uuidv4 } = require('uuid')
+const { actualizarImg } = require('../helpers/actualizar-img.js')
 
 const fileUpload = (req, res = response) => {
   const coleccion = req.params.coleccion
@@ -22,7 +23,7 @@ const fileUpload = (req, res = response) => {
     })
   }
 
-  // Procesar la imagen...
+  // Procesar la imagen
   const file = req.files.imagen
 
   // Tomar la extensión del archivo, ejemplo: .png .jpg etc
@@ -54,17 +55,14 @@ const fileUpload = (req, res = response) => {
       })
     }
 
+    // Actualizar la imagen en la base de datos
+    actualizarImg(coleccion, id, nombreArchivo)
+
     res.json({
       ok: true,
       msg: 'Archivo subido correctamente',
       nombreArchivo
     })
-  })
-
-  res.json({
-    ok: true,
-    nombreArchivo,
-    id
   })
 }
 
