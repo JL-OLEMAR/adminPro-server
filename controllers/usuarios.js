@@ -11,11 +11,11 @@ const getUsers = async (req, res = response) => {
    a que se ejecuten uno a la vez, y retornan en la posición del array */
   const [usuarios, total] = await Promise.all([
     Usuario
-      .find({}, 'nombre email role google')
+      .find({}, 'nombre email role google img')
       .skip(desde) // Salta los primeros 5 registros
       .limit(5), // Muestra solo 5 registros por página
 
-    Usuario.count()
+    Usuario.countDocuments()
   ])
 
   res.json({
