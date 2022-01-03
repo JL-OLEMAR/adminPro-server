@@ -1,7 +1,10 @@
 const { response } = require('express')
+const path = require('path')
+const fs = require('fs')
 const { v4: uuidv4 } = require('uuid')
 const { actualizarImg } = require('../helpers/actualizar-img.js')
 
+// Subir img de un documento
 const fileUpload = (req, res = response) => {
   const coleccion = req.params.coleccion
   const id = req.params.id
@@ -42,11 +45,11 @@ const fileUpload = (req, res = response) => {
   // Generar el nombre del archivo
   const nombreArchivo = `${uuidv4()}.${extensionArchivo}`
 
-  // Path donde se guardará el archivo
-  const path = `./uploads/${coleccion}/${nombreArchivo}`
+  // Path Temporal donde se guardará el archivo
+  const pathTemp = `./uploads/${coleccion}/${nombreArchivo}`
 
   // Mover la imagen
-  file.mv(path, err => {
+  file.mv(pathTemp, err => {
     if (err) {
       console.log(err)
       return res.status(500).json({
@@ -66,4 +69,22 @@ const fileUpload = (req, res = response) => {
   })
 }
 
-module.exports = { fileUpload }
+// Get img de un documento
+const retornarImg = (req, res = response) => {
+  const { coleccion, img } = req.params
+
+  let pathImg = path.join(__dirname, `../uploads/${coleccion}/${img}`)
+
+  if (fs.existsSync(pathImg)) {
+    res.sendFile(pathImg)
+  } else {
+    // Imagen por defecto
+    pathImg = path.join(__dirname, '../uploads/default.png')
+    res.sendFile(pathImg)
+  }
+}
+
+module.exports = {
+  fileUpload,
+  retornarImg
+}
