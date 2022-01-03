@@ -6,8 +6,7 @@ const { actualizarImg } = require('../helpers/actualizar-img.js')
 
 // Subir img de un documento
 const fileUpload = (req, res = response) => {
-  const coleccion = req.params.coleccion
-  const id = req.params.id
+  const { coleccion, id } = req.params
 
   // Validar que exista la colección
   const tiposValidos = ['hospitales', 'medicos', 'usuarios']
