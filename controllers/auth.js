@@ -44,17 +44,38 @@ const login = async (req, res = response) => {
 }
 
 const loginGoogle = async (req, res = response) => {
-  const { token } = req.body
+  const tokenGoogle = req.body.token
 
   try {
-    const { name, email, picture } = await googleVerify(token)
+    const { name, email, picture } = await googleVerify(tokenGoogle)
+
+    const usuarioDB = await Usuario.findOne({ email })
+    let usuario
+
+    if (!usuarioDB) {
+      // Si el usuario no existe en la bd, se crea
+      usuario = new Usuario({
+        nombre: name,
+        email,
+        password: '@@@',
+        img: picture,
+        google: true
+      })
+    } else {
+      // Existe usuario
+      usuario = usuarioDB
+      usuario.google = true
+    }
+
+    // Save usuario
+    await usuario.save()
+
+    // Generar token - JWT
+    const token = await generarJWT(usuario._id)
 
     res.json({
       ok: true,
-      msg: 'Login con Google',
-      name,
-      email,
-      picture
+      token
     })
   } catch (error) {
     res.status(401).json({
