@@ -27,7 +27,7 @@ const newMedico = async (req, res = response) => {
 
     res.json({
       ok: true,
-      medicoDB
+      medico: medicoDB
     })
   } catch (error) {
     console.log(error)
@@ -39,17 +39,63 @@ const newMedico = async (req, res = response) => {
 }
 
 const actualizarMedico = async (req, res = response) => {
-  res.json({
-    ok: true,
-    msg: 'Actualizar Medico'
-  })
+  const medicoId = req.params.id
+  const uid = req.uid // Obtiene el uid del token
+
+  try {
+    const medicoDB = await Medico.findById(medicoId)
+    if (!medicoDB) {
+      return res.status(404).json({
+        ok: false,
+        msg: 'Medico no encontrado'
+      })
+    }
+
+    // Campos a actualizar
+    const cambiosMedico = {
+      ...req.body,
+      usuario: uid
+    }
+
+    const medicoActualizado = await Medico
+      .findByIdAndUpdate(medicoId, cambiosMedico, { new: true })
+
+    res.json({
+      ok: true,
+      medico: medicoActualizado
+    })
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      msg: 'Comuniquese con el administrador'
+    })
+  }
 }
 
 const borrarMedico = async (req, res = response) => {
-  res.json({
-    ok: true,
-    msg: 'Borrar Medico'
-  })
+  const medicoId = req.params.id
+
+  try {
+    const medicoDB = await Medico.findById(medicoId)
+    if (!medicoDB) {
+      return res.status(404).json({
+        ok: false,
+        msg: 'Medico no encontrado'
+      })
+    }
+
+    await Medico.findByIdAndDelete(medicoId)
+
+    res.json({
+      ok: true,
+      msg: 'Medico eliminado'
+    })
+  } catch (error) {
+    res.status(500).json({
+      ok: false,
+      msg: 'Comuniquese con el administrador'
+    })
+  }
 }
 
 module.exports = {
