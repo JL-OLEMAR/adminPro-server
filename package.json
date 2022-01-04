@@ -11,7 +11,8 @@
   "keywords": [
     "mongodb",
     "express",
-    "jsonwebtoken"
+    "jsonwebtoken",
+    "google-auth-library"
   ],
   "author": "José Luis Olemar",
   "license": "ISC",
