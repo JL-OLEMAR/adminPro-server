@@ -6,9 +6,9 @@
     <title>Sign In</title>
 
     <!-- Api Google SignIn -->
-    <script src="https://apis.google.com/js/platform.js" defer></script>
+    <script defer src="https://apis.google.com/js/platform.js"></script>
 
-    <script>
+    <script defer>
       function onSignIn(googleUser) {
         var profile = googleUser.getBasicProfile()
         console.log('ID: ' + profile.getId()) // Do not send to your backend! Use an ID token instead.
