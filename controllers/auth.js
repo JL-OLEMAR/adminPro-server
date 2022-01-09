@@ -90,12 +90,22 @@ const renewToken = async (req, res = response) => {
   // Obtiene el id del usuario, mediante el token solicitado
   const { uid } = req
 
+  // Obtener el usuario por el uid
+  const usuario = await Usuario.findById(uid)
+  if (!usuario) {
+    return res.status(404).json({
+      ok: false,
+      msg: 'Email no encontrado'
+    })
+  }
+
   // Generar token - JWT
   const token = await generarJWT(uid)
 
   res.json({
     ok: true,
-    token
+    token,
+    usuario
   })
 }
 
