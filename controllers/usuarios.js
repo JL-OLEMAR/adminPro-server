@@ -95,8 +95,16 @@ const actualizarUsuario = async (req, res = response) => {
       }
     }
 
-    // Asigna email, pues lineas anteriores se esta excluyendo el email
-    campos.email = email
+    /* Asigna email, pues lineas anteriores se esta excluyendo
+    el email, y valida que no sea user de google */
+    if (!usuarioDB.google) {
+      campos.email = email
+    } else if (usuarioDB.email !== email) {
+      return res.status(400).json({
+        ok: false,
+        msg: 'No puede cambiar el email de google'
+      })
+    }
 
     // Aqui, se actualizará los nuevos campos del usuario
     const usuarioActualizado = await Usuario.findByIdAndUpdate(uid, campos, { new: true })
