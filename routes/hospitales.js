@@ -10,7 +10,7 @@ const { getHospitals, newHospital, actualizarHospital, borrarHospital } = requir
 
 const router = Router()
 
-router.get('/', getHospitals)
+router.get('/', validarJWT, getHospitals)
 
 router.post('/',
   [
