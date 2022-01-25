@@ -1,4 +1,6 @@
+const { response } = require('express')
 const jwt = require('jsonwebtoken')
+const Usuario = require('../models/usuario.js')
 
 const validarJWT = (req, res, next) => {
   // Leer el token
@@ -23,4 +25,44 @@ const validarJWT = (req, res, next) => {
   }
 }
 
-module.exports = { validarJWT }
+// Check if the user is an admin
+const validarADMINROLE = async (req, res = response, next) => {
+  // Req uid
+  const uid = req.uid
+
+  try {
+    // Find user by id in the DB
+    const usuarioDB = await Usuario.findById(uid)
+
+    // Check if user exists
+    if (!usuarioDB) {
+      return res.status(404).json({
+        ok: false,
+        msg: 'Usuario no existe'
+      })
+    }
+
+    // Check if user is admin
+    if (usuarioDB.role !== 'ADMIN_ROLE') {
+      return res.status(401).json({
+        ok: false,
+        msg: 'No tiene permisos para realizar esta acción'
+      })
+    }
+
+    // If everything is ok, continue
+    next()
+  } catch (error) {
+    // If error, return error
+    console.log(error)
+    res.status(500).json({
+      ok: false,
+      msg: 'Comuniquese con el administrador'
+    })
+  }
+}
+
+module.exports = {
+  validarJWT,
+  validarADMINROLE
+}

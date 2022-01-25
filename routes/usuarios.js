@@ -5,7 +5,7 @@ const { Router } = require('express')
 const { check } = require('express-validator')
 
 const { validarCampos } = require('../middlewares/validar-campos.js')
-const { validarJWT } = require('../middlewares/validar-jwt.js')
+const { validarJWT, validarADMINROLE } = require('../middlewares/validar-jwt.js')
 const { newUser, getUsers, actualizarUsuario, borrarUsuario } = require('../controllers/usuarios.js')
 
 const router = Router()
@@ -22,9 +22,11 @@ router.post('/',
   newUser
 )
 
+// Check if the user is an admin
 router.put('/:id',
   [
     validarJWT,
+    validarADMINROLE,
     check('nombre', 'El nombre es obligatorio').not().isEmpty(),
     check('email', 'El email es obligatorio').isEmail(),
     check('role', 'El role es obligatorio').not().isEmpty(),
@@ -32,6 +34,7 @@ router.put('/:id',
   ],
   actualizarUsuario)
 
-router.delete('/:id', validarJWT, borrarUsuario)
+// Check if the user is an admin
+router.delete('/:id', [validarJWT, validarADMINROLE], borrarUsuario)
 
 module.exports = router
