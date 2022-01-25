@@ -62,7 +62,45 @@ const validarADMINROLE = async (req, res = response, next) => {
   }
 }
 
+// Check if the user is the same
+const validarSameUser = async (req, res = response, next) => {
+  const uid = req.uid // Req uid
+  const id = req.params.id // Req id from params
+
+  try {
+    // Find user by id in the DB
+    const usuarioDB = await Usuario.findById(uid)
+
+    // Check if user exists
+    if (!usuarioDB) {
+      return res.status(404).json({
+        ok: false,
+        msg: 'Usuario no existe'
+      })
+    }
+
+    // Check if the user is admin or the same user
+    if (usuarioDB.role === 'ADMIN_ROLE' || uid === id) {
+      // If everything is ok, continue
+      next()
+    } else {
+      return res.status(401).json({
+        ok: false,
+        msg: 'No tiene permisos para realizar esta acción'
+      })
+    }
+  } catch (error) {
+    // If error, return error
+    console.log(error)
+    res.status(500).json({
+      ok: false,
+      msg: 'Comuniquese con el administrador'
+    })
+  }
+}
+
 module.exports = {
   validarJWT,
-  validarADMINROLE
+  validarADMINROLE,
+  validarSameUser
 }
