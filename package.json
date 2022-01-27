@@ -1,6 +1,6 @@
 {
   "name": "02-server-adminpro",
-  "version": "1.7.0",
+  "version": "2.0.0",
   "description": "AdminPro Server",
   "main": "index.js",
   "scripts": {
